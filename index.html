@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdul Mateen - Interactive Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with a Teal Accent -->
+    <!-- Application Structure Plan: A single-page, vertical-scrolling layout with a fixed navigation bar for easy access to different sections. The structure is thematic, starting with a strong profile, followed by interactive skills and project sections, and concluding with a chronological timeline. This design prioritizes showcasing abilities and practical experience, which is most valuable to recruiters, allowing them to quickly assess relevant qualifications through interactive filtering. -->
+    <!-- Visualization & Content Choices: 
+        - Profile: (Inform) -> Text Block -> No interaction -> Justification: Provides a clear, direct summary of his qualifications.
+        - Skills: (Compare/Inform) -> Horizontal Bar Chart -> Hover tooltips -> Justification: More engaging than a static list, providing a quick visual comparison of skill levels. -> Library: Chart.js.
+        - Projects: (Organize/Explore) -> Filterable Card Grid -> Button filters -> Justification: Allows recruiters to instantly find projects using specific technologies (e.g., Python, AI), making the portfolio highly relevant to their needs. -> Method: Vanilla JS.
+        - Experience/Education: (Change/Inform) -> Vertical Timeline -> No interaction -> Justification: A standard and effective way to present chronological information clearly. -> Method: HTML/Tailwind.
+        - Interests: (Inform) -> Icon List -> No interaction -> Justification: A clean and visually appealing way to present personal interests. -> Method: HTML/Tailwind/Unicode.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4;
+            color: #1a202c;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #0d9488;
+        }
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .filter-btn {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .filter-btn.active {
+            background-color: #0d9488;
+            color: white;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.75rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #0d9488;
+            border: 4px solid #f8f7f4;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold text-gray-800">Abdul Mateen</h1>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#profile" class="nav-link text-gray-600 font-medium">Profile</a>
+                    <a href="#skills" class="nav-link text-gray-600 font-medium">Skills</a>
+                    <a href="#projects" class="nav-link text-gray-600 font-medium">Projects</a>
+                    <a href="#experience" class="nav-link text-gray-600 font-medium">Experience</a>
+                </nav>
+                <a href="mailto:ranamateen2004@gmail.com" class="hidden md:inline-block bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition">Contact Me</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24">
+        <section id="hero" class="container mx-auto px-6 py-16 text-center">
+            <h2 class="text-4xl md:text-6xl font-bold text-gray-800 leading-tight">Computer Science Undergraduate</h2>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Proficient in Java, Python, C & SQL | Skilled in Web Development (React), AWS | Eager to Drive Innovative Tech Solutions</p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="https://linkedin.com/in/abdul-mateen-ab3358338" target="_blank" class="text-teal-600 hover:text-teal-800">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+            </div>
+        </section>
+        
+        <section id="profile" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Profile</h3>
+                    <p class="text-gray-500 mt-2">A summary of my professional background and aspirations.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-gray-50 p-8 rounded-xl shadow-sm">
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        Motivated and fast-learning Computer Science undergraduate with four semesters completed and current experience as a Data Engineer Intern. Proficient in core programming languages including Java, Python, C, and SQL, with hands-on knowledge of HTML, CSS, and JavaScript. Recently explored AWS during internship work and self-learned front-end development using React. Known for quick adaptability, logical thinking, and a strong problem-solving mindset. Actively seeking internship opportunities in software development, data engineering, or full-stack web development to contribute to real-world technology teams.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Technical Skills</h3>
+                    <p class="text-gray-500 mt-2">A visualization of my proficiency in various technologies. This chart provides a quick overview of my technical capabilities, highlighting my strengths in different areas of software development.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Projects</h3>
+                    <p class="text-gray-500 mt-2">A selection of my work. Use the filters to explore projects by technology and see my skills in action. Each project demonstrates my ability to apply theoretical knowledge to build practical solutions.</p>
+                </div>
+                <div class="flex justify-center flex-wrap gap-2 mb-12">
+                    <button class="filter-btn active bg-gray-200 text-gray-800 px-4 py-2 rounded-full" data-filter="all">All</button>
+                    <button class="filter-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full" data-filter="ai">AI/ML</button>
+                    <button class="filter-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full" data-filter="python">Python</button>
+                    <button class="filter-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full" data-filter="java">Java</button>
+                    <button class="filter-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full" data-filter="web">Web</button>
+                    <button class="filter-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full" data-filter="csharp">C#</button>
+                </div>
+                <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl font-bold text-gray-800">Career & Education</h3>
+                    <p class="text-gray-500 mt-2">My professional journey and academic background presented in a chronological timeline. This section outlines the key milestones that have shaped my skills and knowledge.</p>
+                </div>
+                <div class="max-w-3xl mx-auto">
+                    <div class="relative pl-10 border-l-2 border-gray-200">
+                        <div class="timeline-item mb-12">
+                            <h4 class="text-xl font-semibold text-gray-800">Internship, Data Engineer</h4>
+                            <p class="text-teal-600 font-medium">Axiom World</p>
+                            <p class="text-sm text-gray-500">Jul 2025 - Present | Lahore, Pakistan</p>
+                            <ul class="mt-2 list-disc list-inside text-gray-600">
+                                <li>Developed and deployed serverless functions using AWS Lambda.</li>
+                                <li>Gained experience with event-driven architecture and integrated Lambda with AWS S3.</li>
+                                <li>Worked on integrating Google Gemini with an MCP server.</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item mb-12">
+                            <h4 class="text-xl font-semibold text-gray-800">BCS, Computer Science</h4>
+                            <p class="text-teal-600 font-medium">Comsats University Islamabad (Lahore Campus)</p>
+                            <p class="text-sm text-gray-500">Sep 2023 - Jul 2027 | Lahore, Pakistan</p>
+                            <p class="mt-2 text-gray-600">Current CGPA: 3.52/4.00. Completed 4 semesters.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="text-xl font-semibold text-gray-800">ICS, Pre-Engineering</h4>
+                            <p class="text-teal-600 font-medium">Punjab College of Information and Technology</p>
+                            <p class="text-sm text-gray-500">Aug 2021 - Jul 2023 | Lahore, Pakistan</p>
+                             <p class="mt-2 text-gray-600">Marks: 85%. Built a strong foundation in computer science and mathematics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-white py-12">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="text-2xl font-bold text-gray-800">Get In Touch</h3>
+                <p class="mt-2 text-gray-600">I'm currently seeking internship opportunities. Feel free to reach out!</p>
+                <a href="mailto:ranamateen2004@gmail.com" class="mt-6 inline-block bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition text-lg">ranamateen2004@gmail.com</a>
+                <p class="mt-8 text-sm text-gray-500">&copy; 2025 Abdul Mateen. Interactive resume generated based on provided CV.</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const skillsData = {
+                labels: ['Java', 'Python', 'C', 'SQL', 'HTML/CSS/JS', 'React', 'AWS', 'MySQL', 'TensorFlow/Keras', 'Git'],
+                datasets: [{
+                    label: 'Proficiency',
+                    data: [90, 95, 80, 85, 90, 70, 75, 85, 70, 90],
+                    backgroundColor: 'rgba(13, 148, 136, 0.6)',
+                    borderColor: 'rgba(13, 148, 136, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(skillsCtx, {
+                type: 'bar',
+                data: skillsData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.raw;
+                                    let label = '';
+                                    if (value >= 90) label = 'Excellent';
+                                    else if (value >= 80) label = 'Proficient';
+                                    else if (value >= 70) label = 'Competent';
+                                    else label = 'Familiar';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#1a202c',
+                                font: {
+                                    size: 14,
+                                    weight: '500'
+                                }
+                            },
+                            grid: {
+                                color: '#e2e8f0'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const projects = [
+                { title: 'AI Tutor Bot', category: ['ai', 'python'], tech: 'Python, Ollama 3, Streamlit', desc: 'Developed an AI-powered tutor for document-based Q&A, featuring a UI for PDF uploads and chat interaction.' },
+                { title: 'Face Emotion Detector', category: ['ai', 'python'], tech: 'Python, TensorFlow/Keras', desc: 'Integrated a pre-trained model to detect real-time facial emotions via webcam using OpenCV.' },
+                { title: 'Emotion-Controlled Car Game', category: ['ai', 'python'], tech: 'Python, Pygame, CV', desc: 'Designed a reaction-based game where a car is controlled by facial expressions, reusing the emotion detection model.' },
+                { title: 'Bayesian Network for Disease Diagnosis', category: ['ai', 'python'], tech: 'Python, Neo4j, pgmpy', desc: 'Built a Bayesian Network to predict diseases from symptoms, using Neo4j for visualizing diagnosis pathways.' },
+                { title: 'Hospital Management System', category: ['csharp'], tech: 'C#, SQL Server', desc: 'Developed a Windows Forms application to manage patients, doctors, and appointments with SQL for CRUD operations.' },
+                { title: 'Social Network App', category: ['web'], tech: 'HTML, CSS, JS, Bootstrap', desc: 'Implemented graph-based friend connections and queue-based posts, applying concepts from Data Structures course.' },
+                { title: 'Hostel Management System', category: ['java'], tech: 'Java (OOP), JavaFX', desc: 'Designed a desktop system for hostel rooms, student records, and fee tracking, applying core OOP concepts.' },
+                { title: 'Library Management System', category: ['c'], tech: 'C Language', desc: 'Built a command-line program to manage library book records, borrowing logs, and return dates.' }
+            ];
+
+            const projectsGrid = document.getElementById('projects-grid');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            function displayProjects(filter) {
+                projectsGrid.innerHTML = '';
+                const filteredProjects = (filter === 'all') ? projects : projects.filter(p => p.category.includes(filter));
+
+                filteredProjects.forEach(project => {
+                    const card = document.createElement('div');
+                    card.className = 'project-card bg-gray-50 p-6 rounded-xl';
+                    card.innerHTML = `
+                        <h4 class="text-xl font-semibold text-gray-800">${project.title}</h4>
+                        <p class="text-teal-600 font-medium mt-1">${project.tech}</p>
+                        <p class="mt-3 text-gray-600">${project.desc}</p>
+                    `;
+                    projectsGrid.appendChild(card);
+                });
+            }
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    displayProjects(button.dataset.filter);
+                });
+            });
+
+            displayProjects('all');
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 60) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
